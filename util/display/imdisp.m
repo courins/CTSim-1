@@ -435,7 +435,7 @@ if isempty(A)
 else
     hIm = image(A);
 end
-set(hAx, 'Visible', 'off', 'DataAspectRatio', [1 1 1], 'DrawMode', 'fast', 'CLim', lims);
+set(hAx, 'Visible', 'off', 'DataAspectRatio', [1 1 1], 'SortMethod', 'depth', 'CLim', lims);
 set(get(hAx, 'XLabel'), 'Visible', 'on');
 set(get(hAx, 'YLabel'), 'Visible', 'on');
 set(get(hAx, 'Title'), 'Visible', 'on');

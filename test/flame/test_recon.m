@@ -3,48 +3,89 @@ load 'temp.mat';
 
 geom = loadProjectionGeometryCT( p );
 
+geom.detSize(2) = 256;
+geom.reconSize(3) = 256;
+geom.reconOffset(3) = 0;
+
 spectrum = loadSpectraCT(p, geom, 2e6);
 
+dir = 'D:\MATLAB\CTData\Dec_01_2015_Study\3ppi_sic_60KV_50mA_lowflow\';
+
 %% load air scan data
-dataPathAir = 'E:\Data\NasaFlame\Nov_10_2015_Study\3ppi_interface_60kV_50mA\air_cold_04\';
+
+dataPathAir = [dir 'air_05' '\'];
+process_seq_file( dir, 'air_05' );
 
 sinoAttAir = loadTableTopData( dataPathAir, geom );
 
-sinoAttAir = beamHardeningMaterialCorrection(sinoAttAir, spectrum, 'Quartz', 10 );
+%% load burn scan data
 
-%% load normal scan data
-
-dataPath = 'E:\Data\NasaFlame\Nov_10_2015_Study\3ppi_interface_60kV_50mA\marker_01\';
-
-%dataPath = 'E:\Data\NasaFlame\Nov_5_2015_Study\DiffusionFlameLaminar_1\';
+dataPath = [dir 'burn_04' '\'];
+process_seq_file( dir, 'burn_04' );
 
 sinoAtt = loadTableTopData( dataPath, geom );
 
-sinoAtt = beamHardeningMaterialCorrection(sinoAtt, spectrum, 'Quartz', 10 );
+%% first pass reconstruction
 
-%%
+sinoAttAirPoly = beamHardeningMaterialCorrection(sinoAttAir, spectrum, 'Quartz', 3 );
 
-geomAir = geom;
-geomAir.reconOffset(3) = geom.reconOffset(3) ;
+imgAir = reconFBP( sinoAttAirPoly, geom, 'hamming' );
 
-imgAir = reconFBP( sinoAttAir, geomAir, 'ram-lak' );
+clear sinoAttAirPoly;
+
+%% second pass beam hardening correction
+
+mapTube = single( imgAir > 0.65 );
+
+sinoTube = forwardProjectMex( mapTube, geom ) ;
+
+sinoAttAirBHC = beamHardeningMaterialCorrectionBurner(sinoAttAir, sinoTube, spectrum);
+
+% final reconstruction
+
+imgAir = reconFBP( sinoAttAirBHC, geom, 'hamming' );
 
 figure(21); 
 if geom.reconSize(3) < 40
     imdisp( imgAir, [0 0.5]   );
 else
-    imdisp( imgAir(end / 2, :, : ), [0 0.5]   );
+    imdisp( squeeze(imgAir(end / 2, :, : ))', [0 0.8]   );
 end
 
-%%
-imgKr = reconFBP( sinoAtt, geom, 'hamming' );
+
+%% first pass reconstruction
+
+sinoAttPoly = beamHardeningMaterialCorrection(sinoAtt, spectrum, 'Quartz', 3 );
+
+imgKr = reconFBP( sinoAttPoly, geom, 'hamming' );
+
+clear sinoAtPoly;
+
+%% second pass beam hardening correction
+
+mapTube = single( imgKr > 0.65 );
+
+sinoTube = forwardProjectMex( mapTube, geom ) ;
+
+sinoAttBHC = beamHardeningMaterialCorrectionBurner(sinoAtt, sinoTube, spectrum);
+
+% final reconstruction
+
+imgKr = reconFBP( sinoAttBHC, geom, 'hamming' );
 
 figure(22);
 if geom.reconSize(3) < 40
     imdisp( imgKr, [0 0.5] );
 else
-    imdisp( imgKr(end / 2, :, : ), [0 0.5] );
+     imdisp( squeeze(imgKr(end / 2, :, : ))', [0 0.8]   );
 end
+
+%%
+figure(23)
+imdisp( squeeze(imgKr(end / 2, :, : ) - imgAir(end / 2, :, : ))', [0 0.1]   );
+
+
+return;
 
 %%
 imgKrReg = imgKr;
