@@ -45,17 +45,16 @@ figure; imdisp( img_pwls0,  [0.20 0.24] );
 
 
 %%
-noFrames = 20;
+noFrames = 40;
 dv = 2e-4;
 p = 0.2;
 os = 4;
 
 % img_tps_0 = img_aps;
 % betas_tps_0 = betas_aps;
-
-[ img_aps, betas_aps ] = reconPwlsApproxPathSeeking( sinoAtt, weights, geom, 'huber', delta, ...
-    os, numos, img_pwls_beta_small, img_pwls_beta_large, beta_small, beta_large, dv, p, noFrames, 0);
-figure; imdisp( img_aps, [0.20 0.24] );
+% [ img_aps, betas_aps ] = reconPwlsApproxPathSeeking( sinoAtt, weights, geom, 'huber', delta, ...
+%     os, numos, img_pwls_beta_small, img_pwls_beta_large, beta_small, beta_large, dv, p, noFrames, 0);
+% figure; imdisp( img_aps, [0.20 0.24] );
 
 [ img_tps_0, betas_tps_0 ] = reconPwlsTruePathSeeking( sinoAtt, weights, geom, 'huber', delta, ...
     os, numos, img_pwls1, img_pwls2, beta1, beta2, dv, p, noFrames, 0);
@@ -71,19 +70,19 @@ figure; imdisp( img_tps_2, [0.20 0.24] );
 
 %%
 
-[ img_psadmma_1, betas_psadmm_1 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
+[ img_psadmma_0, betas_psadmm_0 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
     numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 1 );
+figure; imdisp( img_psadmma_0, [0.20 0.24] );
+
+
+[ img_psadmma_1, betas_psadmm_1 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
+    numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 2 );
 figure; imdisp( img_psadmma_1, [0.20 0.24] );
 
 
 [ img_psadmma_2, betas_psadmm_2 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
-    numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 2 );
-figure; imdisp( img_psadmma_2, [0.20 0.24] );
-
-
-[ img_psadmma_3, betas_psadmm_3 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
     numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 3 );
-figure; imdisp( img_psadmma_3, [0.20 0.24] );
+figure; imdisp( img_psadmma_2, [0.20 0.24] );
 
 
 %%

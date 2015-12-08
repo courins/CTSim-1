@@ -32,6 +32,8 @@ for i = 1 : length( file_list )
     
     sinoTube = forwardProjectMex( mapTube, geom ) ;
     
+    sinoTube = imfilter3( sinoTube, fspecial('gaussian', [5 5], 1 ) );
+    
     sinoAttBHC = beamHardeningMaterialCorrectionBurner(sinoAtt, sinoTube, spectrum);
     
     % final reconstruction
