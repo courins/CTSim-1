@@ -5,10 +5,9 @@ geom = loadProjectionGeometryCT( p );
 
 spectrum = loadSpectraCT(p, geom, 2e6);
 
-dir = 'E:\Data\NasaFlame\Nov_10_2015_Study\10ppi_interface_60kV_50mA\';
+dir = 'D:\MATLAB\CTData\Dec_01_2015_Study\3ppi_sic_60KV_50mA_lowflow\';
 
-file_list = { 'air_01'; 'air_02'; 'background_01'; ...
-    'background_02'; 'burn_01'; 'burn_02'; 'burn_03'; 'burn_04'; 'burn_05'; 'kr100_01'; 'kr100_02' };
+file_list = { 'air_05';  'burn_05';  };
 
 for i = 1 : length( file_list )
     
@@ -22,7 +21,7 @@ for i = 1 : length( file_list )
     
     sinoAtt = beamHardeningMaterialCorrection(sinoAtt, spectrum, 'Quartz', 10 );
     
-    img = reconFBP( sinoAtt, geom, 'ram-lak' );
+    img = reconFBP( sinoAtt, geom, 'hamming' );
     
     save([seq_filename '.mat'], 'img' );
     
