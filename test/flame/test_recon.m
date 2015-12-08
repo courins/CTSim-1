@@ -3,9 +3,9 @@ load 'temp.mat';
 
 geom = loadProjectionGeometryCT( p );
 
-geom.detSize(2) = 256;
-geom.reconSize(3) = 256;
-geom.reconOffset(3) = 0;
+% geom.detSize(2) = 256;
+% geom.reconSize(3) = 256;
+% geom.reconOffset(3) = 0;
 
 spectrum = loadSpectraCT(p, geom, 2e6);
 
@@ -35,9 +35,11 @@ clear sinoAttAirPoly;
 
 %% second pass beam hardening correction
 
-mapTube = single( imgAir > 0.65 );
+mapTube = single( imgAir > 0.6 );
 
 sinoTube = forwardProjectMex( mapTube, geom ) ;
+
+sinoTube = imfilter3( sinoTube, fspecial('gaussian', [5 5], 1 ) );
 
 sinoAttAirBHC = beamHardeningMaterialCorrectionBurner(sinoAttAir, sinoTube, spectrum);
 
@@ -59,13 +61,15 @@ sinoAttPoly = beamHardeningMaterialCorrection(sinoAtt, spectrum, 'Quartz', 3 );
 
 imgKr = reconFBP( sinoAttPoly, geom, 'hamming' );
 
-clear sinoAtPoly;
+clear sinoAttPoly;
 
 %% second pass beam hardening correction
 
-mapTube = single( imgKr > 0.65 );
+mapTube = single( imgKr > 0.6 );
 
 sinoTube = forwardProjectMex( mapTube, geom ) ;
+
+sinoTube = imfilter3( sinoTube, fspecial('gaussian', [5 5], 1 ) );
 
 sinoAttBHC = beamHardeningMaterialCorrectionBurner(sinoAtt, sinoTube, spectrum);
 
@@ -82,7 +86,7 @@ end
 
 %%
 figure(23)
-imdisp( squeeze(imgKr(end / 2, :, : ) - imgAir(end / 2, :, : ))', [0 0.1]   );
+imagesc( squeeze(imgKr(end / 2, :, : ) - imgAir(end / 2, :, : ))', [0 0.1]   );
 
 
 return;

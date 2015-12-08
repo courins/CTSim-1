@@ -22,7 +22,8 @@ fprintf('\tdone.\n');
 downsampleRate  = 1;
 dimemsions      = 3;
 
- parameters = 'parametersTabletop.ini';
+parameters = 'parametersLiver.ini';
+% parameters = 'parametersTabletop.ini';
 % parameters = 'parametersTrueBeamTomo.ini';
 % parameters = 'parametersBeamHardening.ini';
 % parameters = 'parametersSiemensZeego.ini';
