@@ -6,8 +6,7 @@ xs = zeros( [ geom.reconSize(1) geom.reconSize(2) noFrames], 'single' );
 phis = zeros( noFrames, 1);
 regs = zeros( noFrames, 1);
 
-R  = loadPenaltyOperator( pfun, delta );
-
+R  = loadPenaltyOperator( pfun, delta, backProjectMex( w, geom, 1, 0, 'back,tf' ) );
 
 for i = 1 : noFrames 
     
