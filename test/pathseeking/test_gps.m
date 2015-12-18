@@ -74,11 +74,9 @@ figure; imdisp( img_tps_2, [0.20 0.24] );
     numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 1 );
 figure; imdisp( img_psadmma_0, [0.20 0.24] );
 
-
 [ img_psadmma_1, betas_psadmm_1 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
     numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 2 );
 figure; imdisp( img_psadmma_1, [0.20 0.24] );
-
 
 [ img_psadmma_2, betas_psadmm_2 ] = reconPwlsPathSeekingADMM( sinoAtt,weights, geom, 'huber', delta, ...
     numos / 2, img_pwls1, img_pwls2, beta1, beta2, noFrames, 3 );
@@ -93,9 +91,6 @@ figure; imdisp( img_seqs(:,:,:), [0.20 0.24] );
 
 return;
 %%
-
-
-
 %imdisp(img_aps(:,:,2:2:19) - img_aps(:,:,1:2:18), [-0.002 0.002] );
 
 %

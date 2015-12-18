@@ -54,18 +54,20 @@ if nargin < 9
 end
 
 stopCrt         = 1e-5;
-k               = 1;
+k               = coneTruncatedSlices( geom );
 
 rho = 0.1;
 
 % load operators for projection and regularization
 [A, At ] = loadPojectors( geom, numos );
-[R, S, T ]  = loadPenaltyOperator( pfun, delta );
 
-x = img0;
-x = extendVoi( x, k );
+rw = At(w);
+rw = extendVoi( rw, k );
+[R, S, T ]  = loadPenaltyOperator( pfun, delta, rw );
+
 a = A( ones( size(x), 'single' ) );
 precom = At( w .* a );
+precom = extendVoi( precom, k );
 
 fprintf('\nbeta  = %11.2e, rho  = %11.2e\n', beta, rho );
 fprintf('\titnlim = %10g', itnlim);
