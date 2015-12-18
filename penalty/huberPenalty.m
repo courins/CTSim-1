@@ -73,7 +73,7 @@ if dim == 2
         y( 1:end-1, 2:end)      = y(1:end-1, 2:end) + axy * d;
         
     elseif mode == 3
-        
+
         y = zeros( size(x), 'single');
         
         c = cHuber( x(1:end-1, :) -  x(2:end, :), delta) .* ( x(1:end-1, :) +  x(2:end, :));
@@ -91,9 +91,9 @@ if dim == 2
         c = cHuber(  x(2:end, 1:end-1) -  x(1:end-1, 2:end), delta) .* ( x(2:end, 1:end-1) +  x(1:end-1, 2:end));
         y(2:end, 1:end-1)    = y(2:end, 1:end-1)  + axy * c;
         y(1:end-1, 2:end)    = y(1:end-1, 2:end) + axy * c;
-        
+      
         y = y ./ x;
-        
+
     else
         error('wrong mode. \n');
     end
@@ -164,50 +164,51 @@ elseif dim == 3
         
         y = zeros( size(x), 'single');
         
-        c = cHuber( x(1:end-1, :, :) -  x(2:end, :, :), delta) .* ( x(1:end-1, :, :) +  x(2:end, :, :));
+%         c = cHuber( x(1:end-1, :, :) -  x(2:end, :, :), delta) .* ( x(1:end-1, :, :) +  x(2:end, :, :));
+%         y(1:end-1, :, :)    = y(1:end-1, :, :) + c;
+%         y(2:end, :, :)      = y(2:end, :, :) + c;
+%         
+%         
+%         c = cHuber(  x(:, 1:end-1, :) -  x(:, 2:end, :), delta) .* ( x(:, 1:end-1, :) +  x(:, 2:end, :));
+%         y(:, 1:end-1, :)    = y(:, 1:end-1, :) + c;
+%         y(:, 2:end, :)      = y(:, 2:end, :) + c;
+%         
+%         
+%         c = cHuber(x(1:end-1, 1:end-1, :) -  x(2:end, 2:end, :), delta) .* ( x(1:end-1, 1:end-1, :) +  x(2:end, 2:end, :) );
+%         y(1:end-1, 1:end-1, :)  = y(1:end-1, 1:end-1, :) + axy * c;
+%         y(2:end, 2:end, :)      = y(2:end, 2:end, :) + axy * c;
+%         
+%         c = cHuber(  x(2:end, 1:end-1, :) -  x(1:end-1, 2:end, :), delta) .* ( x(2:end, 1:end-1, :) +  x(1:end-1, 2:end, :));
+%         y(2:end, 1:end-1, :)    = y(2:end, 1:end-1, :)  + axy * c;
+%         y(1:end-1, 2:end, :)    = y(1:end-1, 2:end, :) + axy * c;
+%         
+%         c = cHuber( x(:, :,1:end-1) - x(:, :, 2:end), delta) .* ( x(:, :,1:end-1) + x(:, :, 2:end));
+%         y(:, :,1:end-1)     = y(:, :,1:end-1)  + az * c;
+%         y(:, :, 2:end)      = y(:, :, 2:end)   + az * c;
+        
+        
+        c =  ( x(1:end-1, :, :) +  x(2:end, :, :));
         y(1:end-1, :, :)    = y(1:end-1, :, :) + c;
         y(2:end, :, :)      = y(2:end, :, :) + c;
         
-        
-        c = cHuber(  x(:, 1:end-1, :) -  x(:, 2:end, :), delta) .* ( x(:, 1:end-1, :) +  x(:, 2:end, :));
+        c = ( x(:, 1:end-1, :) +  x(:, 2:end, :));
         y(:, 1:end-1, :)    = y(:, 1:end-1, :) + c;
         y(:, 2:end, :)      = y(:, 2:end, :) + c;
         
-        
-        c = cHuber(x(1:end-1, 1:end-1, :) -  x(2:end, 2:end, :), delta) .* ( x(1:end-1, 1:end-1, :) +  x(2:end, 2:end, :) );
+        c =  ( x(1:end-1, 1:end-1, :) +  x(2:end, 2:end, :) );
         y(1:end-1, 1:end-1, :)  = y(1:end-1, 1:end-1, :) + axy * c;
         y(2:end, 2:end, :)      = y(2:end, 2:end, :) + axy * c;
         
-        c = cHuber(  x(2:end, 1:end-1, :) -  x(1:end-1, 2:end, :), delta) .* ( x(2:end, 1:end-1, :) +  x(1:end-1, 2:end, :));
+        c =  ( x(2:end, 1:end-1, :) +  x(1:end-1, 2:end, :));
         y(2:end, 1:end-1, :)    = y(2:end, 1:end-1, :)  + axy * c;
         y(1:end-1, 2:end, :)    = y(1:end-1, 2:end, :) + axy * c;
         
-        c = cHuber( x(:, :,1:end-1) - x(:, :, 2:end), delta) .* ( x(:, :,1:end-1) + x(:, :, 2:end));
+        c = ( x(:, :,1:end-1) + x(:, :, 2:end));
         y(:, :,1:end-1)     = y(:, :,1:end-1)  + az * c;
         y(:, :, 2:end)      = y(:, :, 2:end)   + az * c;
         
-        %         c =  ( x(1:end-1, :, :) +  x(2:end, :, :));
-        %         y(1:end-1, :, :)    = y(1:end-1, :, :) + c;
-        %         y(2:end, :, :)      = y(2:end, :, :) + c;
-        %
-        %         c = ( x(:, 1:end-1, :) +  x(:, 2:end, :));
-        %         y(:, 1:end-1, :)    = y(:, 1:end-1, :) + c;
-        %         y(:, 2:end, :)      = y(:, 2:end, :) + c;
-        %
-        %         c =  ( x(1:end-1, 1:end-1, :) +  x(2:end, 2:end, :) );
-        %         y(1:end-1, 1:end-1, :)  = y(1:end-1, 1:end-1, :) + axy * c;
-        %         y(2:end, 2:end, :)      = y(2:end, 2:end, :) + axy * c;
-        %
-        %         c =  ( x(2:end, 1:end-1, :) +  x(1:end-1, 2:end, :));
-        %         y(2:end, 1:end-1, :)    = y(2:end, 1:end-1, :)  + axy * c;
-        %         y(1:end-1, 2:end, :)    = y(1:end-1, 2:end, :) + axy * c;
-        %
-        %         c = ( x(:, :,1:end-1) + x(:, :, 2:end));
-        %         y(:, :,1:end-1)     = y(:, :,1:end-1)  + az * c;
-        %         y(:, :, 2:end)      = y(:, :, 2:end)   + az * c;
-        
         y = y ./ x;
-        
+
     else
         error('wrong penalty mode. \n');
     end

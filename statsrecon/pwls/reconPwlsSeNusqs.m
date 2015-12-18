@@ -34,18 +34,14 @@ stopCrt         = 1e-5;
 epsilon         = 1e-3;
 nloop           = 3;
 nfix            = 10;
-k               = coneTruncatedSlices( geom );
-
-% use FBP to compute initial image
-x = img0;
-x = extendVoi( x, k );
 
 % load operators for projection and regularization
 [A, At, Aos, Atos, Os ] = loadPojectors( geom, numos );
+[R, S, ~, H ]  = loadPenaltyOperator( pfun, delta );
 
-rw = At(w);
-rw = extendVoi( rw, k );
-[R, S, ~, H ]  = loadPenaltyOperator( pfun, delta, rw );
+% use FBP to compute initial image
+x = img0;
+
 
 % initalization for u0 using edge and intensity of FBP
 v = zeros( size(x), 'single');
@@ -53,6 +49,7 @@ v = v + abs( imageFilter2D( x, [1 2 1; 0 0 0; -1 -2 1] ) );
 v = v + abs( imageFilter2D( x, [1 0 -1; 2 0 -2; 1 0 -1] ) );
 v = v * 2 + abs( x );
 v( v < epsilon ) = epsilon;
+
 
 dL =  ( At( w.* A(v) ) ) ./ v;
 
@@ -85,7 +82,7 @@ for itn = 1 : itnlim
         d = Aos( x, isub )- Os(y,isub) ;
         gradient = Atos( Os(w,isub).* d, isub ) + beta * S(x);
         
-        x = x - gradient ./ extendVoi( dLtilde + dRtilde, k ) ;
+        x = x - gradient ./ ( dLtilde + dRtilde ) ;
         
         x( x < 0 ) = 0;
         x( isnan(x) ) = 0;

@@ -1,4 +1,4 @@
-function [R, S, T, H ]  = loadPenaltyOperator( pfunc, delta, weights )
+function [R, S, T, H ]  = loadPenaltyOperator( pfunc, delta )
 % function [R, S, T, H ]  = loadPenaltyOperator( pfunc, delta )
 % load operators for penalty function
 % inputs:
@@ -23,7 +23,6 @@ if strcmpi(pfunc, 'huber')
     R       = @( x )huberPenalty( x, 0, delta );
     S       = @( x )huberPenalty( x, 1, delta );
     T       = @( x )huberPenalty( x, 2, delta );
-    H       = @( x )huberPenalty( x, 3, delta );
 elseif strcmpi(pfunc, 'quad')
     R       = @( x )quadPenalty( x, 0 );
     S       = @( x )quadPenalty( x, 1 );
@@ -48,14 +47,10 @@ elseif strcmpi(pfunc, 'tv')
     R       = @( x )totalVariationPenalty( x, 0 );
     S       = @( x )totalVariationPenalty( x, 1 );
     T       = @( x )totalVariationPenalty( x, 2 );
-elseif strcmpi(pfunc, 'adaptivehuber')
-    R       = @( x )huberPenaltyAdaptive( x, 0, delta, weights );
-    S       = @( x )huberPenaltyAdaptive( x, 1, delta, weights );
-    T       = @( x )huberPenaltyAdaptive( x, 2, delta, weights );
-    H       = @( x )huberPenalty( x, 3, delta ) .* weights;
 else
     error('unknow penalty function');
 end
+H       = @( x )huberPenalty( x, 3, delta );
 
 
 end

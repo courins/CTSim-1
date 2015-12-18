@@ -18,8 +18,8 @@ if nargin < 3
 end
 
 if nargin < 5
-    ffieldIndexX = [751, 850 ];
-    ffieldIndexY = [101, 300 ];
+    ffieldIndexX = [701, 800 ];
+    ffieldIndexY = [101, 500 ];
 end
 
 %% load parameteter
@@ -46,7 +46,7 @@ fclose(fid);
 validIndexX = [ detWidth/2 - validPixelsX/2 + 1 ,   detWidth/2 + validPixelsX/2];
 validIndexY = [ detHeight/2 - validPixelsY/2 + 1 ,   detHeight/2 + validPixelsY/2];
 
-if 1
+if 0
     figure; imdisp( frame); hold on;
     plot( validIndexX, validIndexY );
     plot( validIndexX(2:-1:1), validIndexY );
@@ -84,25 +84,6 @@ for iv = 1:noViews
     fclose(fid);
     
     sinoPC(:,:,iv) = single( frame( validIndexY(1):validIndexY(2), validIndexX(1):validIndexX(2) ) ) ;
-    
-    % Test: Denoising using wavelets 
-%     noissi2d = sinoPC(:, :, iv); 
-% 
-%     XDEN = func_denoise_dw2d(noissi2d);
-% 
-%     if iv == 1
-%         figure;
-%         imagesc(XDEN-noissi2d);
-%         colormap jet;
-%         
-%         fid = fopen('Before.bin','w');
-%         fwrite(fid, noissi2d, 'single');
-%         
-%         fid = fopen('After.bin','w');
-%         fwrite(fid, XDEN, 'single');
-%         
-%     end
-%     sinoPC(:, :, iv) = XDEN;
     
     if flatFieldIntensity == 0
         % get the I0 from the reference region

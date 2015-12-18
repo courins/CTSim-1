@@ -42,14 +42,12 @@ x = extendVoi( x, k );
 
 % load operators for projection and regularization
 [A, At, Aos, Atos, Os ] = loadPojectors( geom, numos );
-
-rw = At(w);
-rw = extendVoi( rw, k );
-[R, S, T ]  = loadPenaltyOperator( pfun, delta, rw );
+[R, S, T ]  = loadPenaltyOperator( pfun, delta );
 
 a = A( ones( size(x), 'single' ) );
 precom = At( w .* a );
 precom = extendVoi( precom, k );
+
 
 fprintf('\n\tbeta  = %11.2e, rho  = %11.2e\n', beta, 1 );
 fprintf('\titnlim = %10g', itnlim);
@@ -121,11 +119,13 @@ for itn = 1 : itnlim
         rmsd = sqrt( mean( (x(:) - xold(:)).^2 ) );
     else
         if ndims( x ) == 3
-            b = x(:,:,end/2) - imgOpt(:,:,end/2);
+            a = x(:,:,end/2);
+            b = imgOpt(:,:,end/2);
         else
-            b = x - imgOpt;
+            a = x;
+            b = imgOpt;
         end
-        rmsd = sqrt( mean( b(:).^2 ) );
+        rmsd = sqrt( mean( (a(:) - b(:)).^2 ) );
     end
     
     if itn > 2 && phi > phis(itn-1)

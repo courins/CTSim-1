@@ -54,20 +54,11 @@ end
 
 stopCrt         = 1e-10;
 nrestart        = 20;
-
-k               = coneTruncatedSlices( geom );
-
-% use FBP to compute initial image
-x = img0;
-x = extendVoi( x, k );
-
 % load operators for projection and regularization
 [A, At, Aos, Atos, Os ] = loadPojectors( geom, numos );
+[R, S, T ]  = loadPenaltyOperator( pfun, delta );
 
-rw = At(w);
-rw = extendVoi( rw, k );
-[R, S, T ]  = loadPenaltyOperator( pfun, delta, rw );
-
+x = img0;
 a = A( ones( size(x), 'single' ) );
 precom = At( w .* a );
 

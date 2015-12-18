@@ -7,8 +7,6 @@ ehthumbs.db
 *.png
 *.raw
 *.asv
-*.bin
-
 /util/varian/*
 /util/zeego/*
 /output/*

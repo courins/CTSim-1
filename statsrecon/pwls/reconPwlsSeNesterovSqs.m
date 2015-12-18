@@ -32,26 +32,15 @@ if nargin < 9
     img0 = reconFBP( y, geom, 'hamming' );
 end
 
-stopCrt         = 1e-6;
+stopCrt         = 1e-10;
 nrestart        = round(itnlim*2);
-k               = coneTruncatedSlices( geom );
-
-% use FBP to compute initial image
-x = img0;
-x = extendVoi( x, k );
-
 % load operators for projection and regularization
 [A, At, Aos, Atos, Os ] = loadPojectors( geom, numos );
+[R, S, T ]  = loadPenaltyOperator( pfun, delta );
 
-rw = At(w);
-rw = extendVoi( rw, k );
-[R, S, T ]  = loadPenaltyOperator( pfun, delta, rw );
-
-
+x = img0;
 a = A( ones( size(x), 'single' ) );
 precom = At( w .* a );
-precom = extendVoi( precom, k );
-
 
 fprintf('\nbeta  = %11.2e', beta );
 fprintf('\titnlim = %10g', itnlim);

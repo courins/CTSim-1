@@ -116,6 +116,7 @@ elseif dim == 3
         
         y = zeros( size(x), 'single');
 
+        
         c =  ( x(1:end-1, :, :) +  x(2:end, :, :));
         y(1:end-1, :, :)    = y(1:end-1, :, :) + c;
         y(2:end, :, :)      = y(2:end, :, :) + c;
