@@ -36,13 +36,13 @@
 
 \section{Introduction}
 
-CTSim is a simulation toolbox for simulating X-ray Computed Tomography (CT) data acquisition, image reconstruction, and artifacts correction. CTSim is a MATLAB based software that is designed to allow researchers to quick try out their ideas in CT system design. This manual is for user to get familiar with basic features, and provide additional information about advanced algorithms. 
+CTSim is a toolbox for simulating X-ray Computed Tomography (CT) data acquisition, image reconstruction, and artifacts correction. CTSim is a MATLAB based software that is designed to allow researchers to quickly try out their ideas in CT system design with various reconstruction algorithms. This manual is for users to get familiar with basic simulation pipeline, and provide additional informations about advanced reconstruction algorithms. 
 
 You must have a MALTAB later than 2011a in order to use the toolbox. The software is primarily supporting Windows 8 and Mac OS. It is recommend to run on a 64-bit version MATLAB with more than 8 GB REM.
  
 This software was initially developed in by Meng Wu in Dr. Rebecca Fahrig's lab at Stanford University. Many people have contributed in developing this simulation toolbox: Andreas Keil, Yuan Yao, Andreas Maier, Erica Cherry. CTSim is only allowed for academic uses. If you publish paper using this software, please consider cite this manual as a reference. 
 
-To obtain new version or report bugs, please contact Meng Wu via mengwu AT stanford DOT edu. 
+To obtain new/full version or report bugs, please contact Meng Wu via mengwu AT stanford DOT edu. 
 
 \pagebreak
 
@@ -50,7 +50,7 @@ To obtain new version or report bugs, please contact Meng Wu via mengwu AT stanf
 
 
 \paragraph{1.} Download CTSim and save to your MATLAB default folder. 
-\paragraph{2.}  Compile MEX functions if needed. Details about the implement MEX functions are described in later section. More information about MATLAB MEX-function, please see  \url{http://www.mathworks.com/help/matlab/ref/mex.html}.
+\paragraph{2.} Compile MEX functions if needed. Details about the implement MEX functions are described in the later section. More information about MATLAB MEX-function, please see  \url{http://www.mathworks.com/help/matlab/ref/mex.html}.
 \paragraph{3.}  Add and save paths to MATLAB (optional). The \texttt{startup.m} will add all necessary paths for you. 
 
 
@@ -64,7 +64,7 @@ This quick starts shows how to generate CT data from phantom and do a simple FBP
 
 The basic workflow of the simulation toolbox is:
 
-\paragraph{1.}  Read in system configuration.
+\paragraph{1.} Read in system configuration.
 
 \paragraph{2.} Load parameters such as phantom, geometry, and spectrum, and save as structures. 
 
