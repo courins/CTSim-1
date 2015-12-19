@@ -1,0 +1,5 @@
+NDims = 2
+DimSize = 350 780
+ElementSpacing = 0.700000 0.700000
+ElementType = MET_FLOAT
+ElementDataFile = XCAT-thorax-density.raw
