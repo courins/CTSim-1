@@ -23,7 +23,7 @@ if spectrum.useBowtie
 end
 
 polyCoeffs = beamHardeningCorrectionPolynomialCoefficients( material, ...
-    spectrum.energyBinLabels, photonsPerEnergyBin, spectrum.energyAverage, polyOrders, maximumThickness );
+    spectrum.energyBinLabels, photonsPerEnergyBin, spectrum.energyAverage , polyOrders, maximumThickness );
 
 sinoOut = sinoIn * polyCoeffs(1);
 for i = 2 : polyOrders

@@ -86,9 +86,9 @@ save('temp.mat', 'p', 'outputDir', 'sinosDirKeV', 'sinosDirMeV');
 fprintf('\tdone.\n\t');
 
 %% Initialize varian's file reader
-addpath(genpath('../Tools/IALMLToolbox'));
+%addpath(genpath('../Tools/IALMLToolbox'));
 addpath(genpath('../Tools/XIMToolbox'));
-startupIALML;
+%startupIALML;
 
 
 

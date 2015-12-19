@@ -39,8 +39,10 @@ k  = coneTruncatedSlices( geom );
 
 % load operators for projection and regularization
 [A, At, Aos, Atos, Os ] = loadPojectors( geom, numos );
-[R, S, T ]  = loadPenaltyOperator( pfun, delta );
 
+rw = At(w);
+rw = extendVoi( rw, k );
+[R, S, T ]  = loadPenaltyOperator( pfun, delta, rw );
 
 a = A( ones( size(img0), 'single' ) );
 precom = At( w .* a );

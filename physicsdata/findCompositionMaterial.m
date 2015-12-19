@@ -4,7 +4,7 @@ if nargin == 0
     ztable = {'adipose', 'blood', 'bone_compact', 'bone_cortical', 'brain', 'lung', ...
         'muscle_skeletal', 'muscle_striated', 'skin', 'soft_tissue', 'water', 'air' ...
         'CWO', 'Acrylic', 'PMP', 'Delrin', 'Teflon', 'Polystryrene', 'Bone20', 'Bone50' ...,
-        'LDPE', 'Quartz' };
+        'LDPE', 'Quartz', 'SiC' };
     return;
 end
 
@@ -77,6 +77,9 @@ switch material
     case 'Quartz'
         ztable = compositionData.quartz(2:end,:);
         density = compositionData.quartz(1,2);
+    case 'SiC'
+        ztable = compositionData.sic(2:end,:);
+        density = compositionData.sic(1,2);
     otherwise
         ztable = material;
         [ ~ , ~, element_data] = XrayData;

@@ -334,6 +334,18 @@ d = [
 dat.quartz = d;
 s(d(2:end,1),end+1) = d(2:end,2);
 
+
+% SiC
+d = [
+-1  3.21
+6 	0.3
+14  0.7
+];
+dat.sic = d;
+s(d(2:end,1),end+1) = d(2:end,2);
+
+
+
 dat.summary = s;
 
 
