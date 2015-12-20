@@ -46,7 +46,7 @@ fclose(fid);
 validIndexX = [ detWidth/2 - validPixelsX/2 + 1 ,   detWidth/2 + validPixelsX/2];
 validIndexY = [ detHeight/2 - validPixelsY/2 + 1 ,   detHeight/2 + validPixelsY/2];
 
-if 1
+if 0
     figure; imdisp( frame); hold on;
     plot( validIndexX, validIndexY );
     plot( validIndexX(2:-1:1), validIndexY );
@@ -86,8 +86,8 @@ for iv = 1:noViews
     sinoPC(:,:,iv) = single( frame( validIndexY(1):validIndexY(2), validIndexX(1):validIndexX(2) ) ) ;
     
     % Test: Denoising using wavelets 
-%     noissi2d = sinoPC(:, :, iv); 
-% 
+    noissi2d = sinoPC(:, :, iv); 
+
 %     XDEN = func_denoise_dw2d(noissi2d);
 % 
 %     if iv == 1
