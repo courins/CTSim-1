@@ -1,4 +1,4 @@
-function sinoOut = beamHardeningMaterialCorrectionBurner(sinoIn, pathLengthQuartz, spectrum)
+function sinoOut = beamHardeningMaterialCorrectionBurner(sinoIn, sinoAirScan, pathLengthQuartz, spectrum)
 % A special two-pass dual material beam hardening correction algorithm
 % designed for the porous median bruner projection
 % The materials of the burner are Quartz and SiC, the correction is mean
@@ -86,8 +86,8 @@ mean( (gainCorrection -  A * polyCoeffs ).^2 );
 
 %% Final gain correction
 
-sinoGainBHC = ones( size( sinoIn ), 'single' );
-sinoGainBHC = sinoGainBHC * polyCoeffs(1) + sinoIn * polyCoeffs(2) + sinoIn.^2 * polyCoeffs(2) + pathLengthQuartz * polyCoeffs(3);
+sinoGainBHC = ones( size( sinoAirScan ), 'single' );
+sinoGainBHC = sinoGainBHC * polyCoeffs(1) + sinoAirScan * polyCoeffs(2) + sinoAirScan.^2 * polyCoeffs(2) + pathLengthQuartz * polyCoeffs(3);
 
 sinoGainBHC( sinoGainBHC > 3 ) = 3; 
 

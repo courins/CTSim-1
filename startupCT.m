@@ -22,8 +22,8 @@ fprintf('\tdone.\n');
 downsampleRate  = 1;
 dimemsions      = 3;
 
-% parameters = 'parametersLiver.ini';
-parameters = 'parametersTabletop.ini';
+ parameters = 'parametersLiver.ini';
+% parameters = 'parametersTabletop.ini';
 % parameters = 'parametersTabletop_Dec_10_2015.ini';
 % parameters = 'parametersTrueBeamTomo.ini';
 % parameters = 'parametersBeamHardening.ini';
