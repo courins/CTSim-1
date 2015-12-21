@@ -2,11 +2,11 @@
 load 'temp.mat';
 
 geom = loadProjectionGeometryCT( p );
-geom.detOffset(2) = -  geom.detOffset(2);
+%geom.detOffset(2) = -  geom.detOffset(2);
 
 spectrum = loadSpectraCT(p, geom, 2e6);
 
-Dir = 'E:\Data\NasaFlame\Nov_10_2015_Study\3ppi_interface_60kV_50mA\';
+Dir = 'D:\TabletopScannerData\Nov_10_2015_Study\3ppi_interface_60kV_50mA\';
 
 %% load air scan data
 
@@ -35,13 +35,13 @@ clear sinoAttAirPoly sinoAttPoly;
 
 %% second pass beam hardening correction
 
-mapTube = single( imgAir > 0.7 );
+mapTube = single( imgAir > 0.6 );
 sinoTube = forwardProjectMex( mapTube, geom ) ;
 sinoTube = imfilter3( sinoTube, fspecial('gaussian', [5 5], 1 ) );
 
 %%
 
-sinoSubBHC = beamHardeningMaterialCorrectionBurner(sinoAtt - sinoAttAir, (sinoAtt + sinoAttAir)/2, sinoTube, spectrum);
+sinoSubBHC = beamHardeningMaterialCorrectionBurner(sinoAtt - sinoAttAir, sinoAttAir, sinoTube, spectrum);
 
 imgSubBHC = reconFBP( sinoSubBHC, geom, 'hamming' );
 

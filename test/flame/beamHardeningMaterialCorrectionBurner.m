@@ -18,7 +18,7 @@ function sinoOut = beamHardeningMaterialCorrectionBurner(sinoIn, sinoAirScan, pa
 
 % default material assumed for beam hardening correction is water
 
-if spectrum.energyIntegrating
+if spectrum.energyIntegrating 
     photonsPerEnergyBin = spectrum.DQE * spectrum.photonsPerEnergyBin .* spectrum.energyBinLabels * spectrum.detectorGain ;
 else
     photonsPerEnergyBin = spectrum.DQE * spectrum.photonsPerEnergyBin * spectrum.detectorGain  ;
@@ -26,7 +26,7 @@ end
 
 if spectrum.useBowtie
     photonsPerEnergyBin = computeResultingPhotons( photonsPerEnergyBin, ...
-        spectrum.energyBinLabels, spectrum.bowtieMaterial, 10 );
+        spectrum.energyBinLabels, spectrum.bowtieMaterial, 15 );
 end
 
 
@@ -37,12 +37,12 @@ muSiC = materialAttenuation( spectrum.energyBinLabels, 'SiC' );
 
 muKr = XrayMu( 'Kr', spectrum.energyBinLabels );
 
-muKrRef = XrayMu( 'Kr', spectrum.energyAverage + 5 );
+muKrRef = XrayMu( 'Kr', spectrum.energyAverage + 7 );
 
 %% estimate gain correction with spectrum info
 
 % create a meshgrid of path lengths
-quartzLengths = linspace( 0.6, 1.0, 64);
+quartzLengths = linspace( 0.6, 2.0, 64);
 sicLengths = linspace( 0, 0.7, 64);
 
 [quartzLengthTable,  sicLengthTable] = meshgrid(quartzLengths, sicLengths );
@@ -69,12 +69,12 @@ for i = 1 : n
 end
 
 
-mean( lineIntegralTable(:))
+mean( lineIntegralTable(:));
 %% calculate beam hardening gain correction polynomial
 
 A = [ones(n, 1) lineIntegralTable lineIntegralTable.^2 quartzLengthTable quartzLengthTable.*lineIntegralTable ];
 
-polyCoeffs = A \ gainCorrection;
+polyCoeffs = A \ gainCorrection
 
 % check MSE 
 sqrt( mean( (gainCorrection -  A * polyCoeffs ).^2 ) );

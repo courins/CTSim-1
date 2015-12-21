@@ -1,16 +1,3 @@
-clear all;
-close all;
-
-data = load( 'burn_04.mat');
-imgKr = data.imgBHC;
-
-data = load( 'air_05.mat');
-imgAir = data.imgBHC;
-
-clear data;
-
-
-
 %% Get image pixel that are not gas
 
 kernelSize = 5;
@@ -75,6 +62,7 @@ end
 figure; plot( att_curve ); hold on;
 plot( att_curve_bhc, 'r' );
 xlabel 'slice #', ylabel 'attenuation';
+axis([1 length( att_curve ) 0 0.02])
 
 
 figure;
