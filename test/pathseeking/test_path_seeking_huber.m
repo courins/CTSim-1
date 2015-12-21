@@ -32,7 +32,7 @@ nitn = 50;
 numos = 20;
 noFrames = 40;
 
-delta_list = [2e-4 1e-3 2e-3 3e-3 4e-3 5e-3];
+delta_list = [ 2e-3 3e-3 4e-3 5e-3];
 
 for i = 1 : length( delta_list )
     
