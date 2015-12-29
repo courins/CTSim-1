@@ -1,4 +1,4 @@
-function [sinoAtt, sinoPC, flatFieldPhotonCounts ] = loadTableTopData( dataPath, geom, flatFieldIntensity, ffieldIndexX, ffieldIndexY )
+function [sinoAtt, sinoPC, flatFieldPhotonCounts ] = loadTableTopData( dataPath, geom, flatFieldIntensity, ffieldIndexX, ffieldIndexY, offsetX, offsetY )
 %% Load projection data from the table top system. The varian .seq
 % data is firstly converted to .raw data using Viv_ind.m
 % inputs:
@@ -22,6 +22,12 @@ if nargin < 5
     ffieldIndexY = [101, 300 ];
 end
 
+
+if nargin < 7
+    offsetX = 0;
+    offsetY = 0;
+end
+
 %% load parameteter
 %dataPath = 'E:\Data\NasaFlame\June_18_Study\KrCalibration_BeamHardening_60kV20ma\Ballloon_CT_100PercentKr_60kV_20ma\';
 
@@ -43,8 +49,8 @@ fid=fopen([dataPath fileName] );
 frame = fread(fid,[detWidth,detHeight],'float')';
 fclose(fid);
 
-validIndexX = [ detWidth/2 - validPixelsX/2 + 1 ,   detWidth/2 + validPixelsX/2];
-validIndexY = [ detHeight/2 - validPixelsY/2 + 1 ,   detHeight/2 + validPixelsY/2];
+validIndexX = [ detWidth/2 - validPixelsX/2 + 1 ,   detWidth/2 + validPixelsX/2] + offsetX;
+validIndexY = [ detHeight/2 - validPixelsY/2 + 1 ,   detHeight/2 + validPixelsY/2] + offsetY;
 
 if 0
     figure; imdisp( frame); hold on;
@@ -85,24 +91,8 @@ for iv = 1:noViews
     
     sinoPC(:,:,iv) = single( frame( validIndexY(1):validIndexY(2), validIndexX(1):validIndexX(2) ) ) ;
     
-    % Test: Denoising using wavelets 
-    noissi2d = sinoPC(:, :, iv); 
-
-%     XDEN = func_denoise_dw2d(noissi2d);
-% 
-%     if iv == 1
-%         figure;
-%         imagesc(XDEN-noissi2d);
-%         colormap jet;
-%         
-%         fid = fopen('Before.bin','w');
-%         fwrite(fid, noissi2d, 'single');
-%         
-%         fid = fopen('After.bin','w');
-%         fwrite(fid, XDEN, 'single');
-%         
-%     end
-%     sinoPC(:, :, iv) = XDEN;
+    % Test: Denoising using wavelets
+    % noissi2d = sinoPC(:, :, iv);
     
     if flatFieldIntensity == 0
         % get the I0 from the reference region

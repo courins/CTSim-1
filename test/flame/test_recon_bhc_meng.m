@@ -2,116 +2,90 @@
 load 'temp.mat';
 
 geom = loadProjectionGeometryCT( p );
+geom.detOffset(2) = geom.detOffset(2) - 64;
 
 spectrum = loadSpectraCT(p, geom, 2e6);
 
-Dir = 'D:\MATLAB\CTData\Dec_01_2015_Study\3ppi_sic_60KV_50mA_lowflow\';
+Dir = 'D:\TabletopScannerData\Nov_10_2015_Study\3ppi_interface_60kV_50mA\';
 
 %% load air scan data
 
-dataPathAir = [Dir 'air_04' '\'];
+dataPathAir = [Dir 'air_cold_04' '\'];
+process_seq_file( Dir, 'air_cold_04' );
+[sinoAttAir, sinoPCAir] = loadTableTopData( dataPathAir, geom, 0, [701 800], [101 500], 0 , -64 );
 
-process_seq_file( Dir, 'air_04' );
-
-sinoAttAir = loadTableTopData( dataPathAir, geom, 0, [701 800], [101 500] );
+dataPathAir = [Dir 'air_cold_05' '\'];
+process_seq_file( Dir, 'air_cold_05' );
+sinoAttAir = sinoAttAir + loadTableTopData( dataPathAir, geom, 0, [701 800], [101 500], 0 , -64 );
+sinoAttAir = sinoAttAir / 2;
 
 % load burn scan data
 
-dataPath = [Dir 'burn_05' '\'];
+dataPath = [Dir 'background_01' '\'];
+process_seq_file( Dir, 'background_01' );
+[sinoAtt, sinoPC] = loadTableTopData( dataPath, geom, 0, [701 800], [101 500], 0, -64 );
 
-process_seq_file( Dir, 'burn_05' );
-
-sinoAtt = loadTableTopData( dataPath, geom, 0, [701 800], [101 500] );
-
+dataPath = [Dir 'background_02' '\'];
+process_seq_file( Dir, 'background_02' );
+sinoAtt = sinoAtt + loadTableTopData( dataPath, geom, 0, [701 800], [101 500], 0, -64 );
+sinoAtt = sinoAtt / 2;
 
 %% first pass reconstruction
 
 sinoAttAirPoly = beamHardeningMaterialCorrection(sinoAttAir, spectrum, 'Quartz', 3 );
-
 imgAir = reconFBP( sinoAttAirPoly, geom, 'hamming' );
 
-%imgAir = reconFBP( sinoAttAir, geom, 'hamming' );
+sinoAttPoly = beamHardeningMaterialCorrection(sinoAtt, spectrum, 'Quartz', 3 );
+imgKr = reconFBP( sinoAttPoly, geom, 'hamming' );
 
-%clear sinoAttAirPoly;
+imgSub = imgKr - imgAir;
 
-%return;
-
+clear sinoAttAirPoly sinoAttPoly;
 
 %% second pass beam hardening correction
 
 mapTube = single( imgAir > 0.6 );
-
 sinoTube = forwardProjectMex( mapTube, geom ) ;
-
 sinoTube = imfilter3( sinoTube, fspecial('gaussian', [5 5], 1 ) );
 
-%%
+sinoSubBHC = beamHardeningMaterialCorrectionBurner(sinoAtt - sinoAttAir, sinoAttAir, sinoTube, spectrum);
 
-sinoDiff = sinoAtt - sinoAttAir;
+imgSubBHC = reconFBP( sinoSubBHC, geom, 'hamming' );
 
-sinoAttAirBHC = beamHardeningMaterialCorrectionBurner(sinoDiff, sinoAttAir, sinoTube, spectrum);
+%% PWLS reconstruction
 
-imgAir = reconFBP( sinoAttAirBHC, geom, 'hamming' );
+weights = computeWeightsPwls( ( sinoPC + sinoPCAir ) / 2 , 0, spectrum.electronicNoise );
 
-% 
-% % final reconstruction
-% 
-% imgAir = reconFBP( sinoAttAirBHC, geom, 'hamming' );
-% 
-% figure(21); 
-% if geom.reconSize(3) < 40
-%     imdisp( imgAir, [0 0.5]   );
-% else
-%     imdisp( squeeze(imgAir(end / 2, :, : ))', [0 0.8]   );
-% end
+inner = segmentPorousMediaBurner( imgAir, imgKr, 1 );
+burner = segmentPorousMediaBurner( imgAir, imgKr, 5 );
+burner( inner ) = false; 
 
+img_pwls_1 = reconPMBPwlsLALMOs14( sinoSubBHC, weights, geom, 10, 'isotv', 30, 0, 12, imgSubBHC, burner );
 
-%% first pass reconstruction
+img_pwls_2 = reconPMBPwlsLALMOs14( sinoSubBHC, weights, geom, 1, 'isotv', 30, 0, 12, imgSubBHC, burner );
 
- %sinoAttPoly = beamHardeningMaterialCorrection(sinoAtt, spectrum, 'Quartz', 3 );
+img_pwls_3 = reconPMBPwlsLALMOs14( sinoSubBHC, weights, geom, 0.1, 'isotv', 30, 0, 12, imgSubBHC, burner );
 
-imgKr = reconFBP( sinoAtt, geom, 'hamming' );
+%% Display results
 
-%clear sinoAttPoly;
+figure;
+slice = imgSubBHC(:,end/2,:);
+imagesc( squeeze( slice )' , [0 0.015] ); axis image, colorbar, colormap jet;
+title 'FBP reconstruction'
 
-%% second pass beam hardening correction
+figure;
+slice = img_pwls_1(:,end/2,:);
+imagesc( squeeze( slice )' , [0 0.015] ); axis image, colorbar, colormap jet;
+title 'beta = 10'
 
-% mapTube = single( imgKr > 0.6 );
-% 
-% sinoTube = forwardProjectMex( mapTube, geom ) ;
-% 
-% sinoTube = imfilter3( sinoTube, fspecial('gaussian', [5 5], 1 ) );
-% 
-% sinoAttBHC = beamHardeningMaterialCorrectionBurner(sinoAtt, sinoTube, spectrum);
-% 
-% % final reconstruction
-% 
-% imgKr = reconFBP( sinoAttBHC, geom, 'hamming' );
-% 
-% figure(22);
-% if geom.reconSize(3) < 40
-%     imdisp( imgKr, [0 0.5] );
-% else
-%      imdisp( squeeze(imgKr(end / 2, :, : ))', [0 0.8]   );
-% end
+figure;
+slice = img_pwls_2(:,end/2,:);
+imagesc( squeeze( slice )' , [0 0.015] ); axis image, colorbar, colormap jet;
+title 'beta = 1'
 
-%%
-figure(23)
-imagesc( squeeze(imgKr(end / 2, :, : ) - imgAir(end / 2, :, : ))', [0 0.1]   );
+figure;
+slice = img_pwls_3(:,end/2,:);
+imagesc( squeeze( slice )' , [0 0.015] ); axis image, colorbar, colormap jet;
+title 'beta = 0.1'
 
 
-return;
-
-%%
-imgKrReg = imgKr;
-
-[optimizer, metric] = imregconfig('monomodal');
-for i = 1 : size( imgAir, 3 )
-    if mod(i, 50) == 0
-        fprintf('(%i/%i)... ', i, size(imgAir, 3 ) );
-    end
-    slice = imregister(imgKr(:,:,i), imgAir(:, :, i), 'rigid', optimizer, metric);
-    imgKrReg( :,:,i) = slice;
-end
-
-figure(23); imdisp( imgKrReg(:,end/2,:) - imgAir(:,end/2,:)  , [-0.1 0.1] );
