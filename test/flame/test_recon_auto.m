@@ -11,7 +11,7 @@ file_list_air = { 'air_01';  'air_02'; 'air_03'; 'air_04'; 'air_05';  'air_06'; 
 
 file_list_burn = { 'burn_00'; 'burn_01'; 'burn_02'; 'burn_03'; 'burn_04'; 'burn_05'; 'burn_06';  };
 
-for i = 1 : min(  length( file_list_air ), length( file_list_burn ) )
+for i = 2 : min(  length( file_list_air ), length( file_list_burn ) )
     
     
     %% load air scan data
@@ -49,7 +49,7 @@ for i = 1 : min(  length( file_list_air ), length( file_list_burn ) )
     
     imgSubBHC = reconFBP( sinoSubBHC, geom, 'hamming' );
     
-    save([seq_filename '.mat'], 'imgAir', 'imgKr', 'imgSub', 'imgSubBHC');
+    save(['3ppi_recon_' num2str(i) '.mat'], 'imgAir', 'imgKr', 'imgSub', 'imgSubBHC');
     
 end
 

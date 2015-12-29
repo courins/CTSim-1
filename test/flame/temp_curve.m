@@ -1,40 +1,9 @@
 %% Get image pixel that are not gas
 
-kernelSize = 5;
-%imgSub = imgKr - imgAir;
 
-% segmentation
-solid = imgAir > 0.3;
-solid = solid | imgKr > 0.3;
+final = segmentPorousMediaBurner( imgAir, imgKr, 5 );
 
-% mophological blurring in all dimension
-final = solid;
-
-solid_blurred = solid; 
-
-% in x direction
-for i = 1 : size( imgAir, 1 )
-    solid_blurred( i, :, : ) = imdilate( solid(i,:,:) , ones(kernelSize) ); 
-end
-final = final | solid_blurred;
-
-% in y direction
-for i = 1 : size( imgAir, 1 )
-    solid_blurred( :, i, : ) = imdilate( solid(:,i,:) , ones(kernelSize) ); 
-end
-final = final | solid_blurred;
-
-% in z direction
-for i = 1 : size( imgAir, 3 )
-    solid_blurred( :, :, i ) = imdilate( solid(:,:,i) , ones(kernelSize) ); 
-end
-final = final | solid_blurred;
-
-final = final | abs( imgSub ) > 0.02;
-
-% for slices that have porous media below system resolution
- final( :, :, 380 : end ) = false;
-
+%final( final1 ) = false;
 
 %% Now let's compute average density for each slice
 close all;
@@ -59,19 +28,21 @@ for i = 1 : length( att_curve )
     att_curve_bhc(i) = mean( slice_bhc( valid(:) ) );
 end
 
-figure; plot( att_curve ); hold on;
-plot( att_curve_bhc, 'r' );
+figure; plot( att_curve, 'r' ); hold on;
+plot( att_curve_bhc, 'b' );
 xlabel 'slice #', ylabel 'attenuation';
-axis([1 length( att_curve ) 0 0.02])
-
+axis([1 length( att_curve ) 0 0.015])
+legend('Uncorrected', 'corrected')
 
 figure;
 slice = imgSub(:,end/2,:);
 slice( final(:,end/2,:) ) = 0;
-imagesc( squeeze( slice )' , [0 0.02] ); axis image, colorbar, colormap jet;
-
+imagesc( squeeze( slice )' , [0 0.015] ); axis image, colorbar, colormap jet;
+title 'Uncorrected'
 
 figure;
 slice = imgSubBHC(:,end/2,:);
 slice( final(:,end/2,:) ) = 0;
-imagesc( squeeze( slice )' , [0 0.02] ); axis image, colorbar, colormap jet;
+imagesc( squeeze( slice )' , [0 0.015] ); axis image, colorbar, colormap jet;
+title 'Beam hardening corrected'
+
