@@ -1,10 +1,3 @@
-function [XDEN,cfsDEN,dimCFS] = func_denoise_dw2d(X)
-% FUNC_DENOISE_DW2D Saved Denoising Process.
-%   X: matrix of data
-%   -----------------
-%   XDEN: matrix of denoised data
-%   cfsDEN: decomposition vector (see WAVEDEC2)
-%   dimCFS: corresponding bookkeeping matrix
 
 function [XDEN,cfsDEN,dimCFS] = func_denoise_dw2d(X)
 % FUNC_DENOISE_DW2D Saved Denoising Process.
